@@ -2,7 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using PredictionModels;
+using CVAssignment20221217124400.Models;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -44,25 +44,24 @@ namespace UsingAPI
             return content;
         }
 
-        public async Task<List<Prediction>> GetPredictionsAsync(ByteArrayContent content)
+        public async Task<MyPredictionModel> GetPredictionsAsync(ByteArrayContent content)
         {
 
             HttpResponseMessage resMessg = await this.Client.PostAsync(this.PredictionURL, content);
             string str = await resMessg.Content.ReadAsStringAsync();
             MyPredictionModel predModel = JsonConvert.DeserializeObject<MyPredictionModel>(str);
-            List<Prediction> predictions = predModel.predictions;
 
-            return predictions;
+            return predModel;
 
         }
 
-        public Task<List<Prediction>> GetPredictionsAsync(string imgFileName)
+        public Task<MyPredictionModel> GetPredictionsAsync(string imgFileName)
         {
             ByteArrayContent content = GetImgContent(imgFileName);
             return GetPredictionsAsync(content);
         }
 
-        public Task<List<Prediction>> GetPredictionsAsync(Bitmap img)
+        public Task<MyPredictionModel> GetPredictionsAsync(Bitmap img)
         {
             ByteArrayContent content = GetImgContent(img);
             return GetPredictionsAsync(content);

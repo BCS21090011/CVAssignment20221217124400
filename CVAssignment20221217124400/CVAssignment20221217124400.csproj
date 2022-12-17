@@ -58,6 +58,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\MaOwnPredModel.cs" />
     <Compile Include="Models\Root.cs" />
     <Compile Include="ObjectDetection.cs" />
     <Compile Include="UsingAPI.cs" />

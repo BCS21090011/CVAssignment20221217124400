@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UsingAPI;
-using PredictionModels;
+using CVAssignment20221217124400.Models;
 using ObjectDetection;
 
 namespace CVAssignment20221217124400
@@ -26,8 +26,7 @@ namespace CVAssignment20221217124400
 
         private string imgFileName;
         private Bitmap oriImg;
-        private List<Prediction> predictions = new List<Prediction>();
-        private List<Bitmap> predImgs = new List<Bitmap>();
+        private List<MaOwnPredModel> predictionResults = new List<MaOwnPredModel>();
 
         private int index = 0;
 
@@ -48,8 +47,7 @@ namespace CVAssignment20221217124400
 
         private async void BrowseImgButton_Click(object sender, EventArgs e)
         {
-            predictions.Clear();
-            predImgs.Clear();
+            predictionResults.Clear();
 
             OpenFileDialog OpenFile = new OpenFileDialog();
             if (OpenFile.ShowDialog() == DialogResult.OK)
@@ -76,7 +74,7 @@ namespace CVAssignment20221217124400
             }
             catch (Exception)
             {
-                Console.WriteLine("Error in function: Prev()");
+
             }
         }
 
@@ -89,17 +87,17 @@ namespace CVAssignment20221217124400
             }
             catch (Exception)
             {
-                Console.WriteLine("Error in function: Next()");
+
             }
         }
 
         private async Task GetObjectFromImg()
         {
-            float probToPass = 0.95f;
+            double probToPass = 0.95;
             string targetTagName = "people";
 
-            Task<List<Prediction>> Tsk = objdttctAPI.GetPredictionsAsync(oriImg);
-            List<Prediction> tmpPredictions = await Tsk;
+            MyPredictionModel predModel = await objdttctAPI.GetPredictionsAsync(oriImg);
+            List<Prediction> tmpPredictions = predModel.predictions;
 
             ObjDetection obj = new ObjDetection();
             
@@ -109,8 +107,11 @@ namespace CVAssignment20221217124400
                 {
                     if (pred.tagName == targetTagName)
                     {
-                        predictions.Add(pred);
-                        predImgs.Add(obj.GetPredictionBitmapImg(oriImg, pred));
+                        predictionResults.Add(new MaOwnPredModel()
+                        {
+                            Image = obj.GetPredictionBitmapImg(oriImg, pred),
+                            Probability = pred.probability
+                        });
                     }
                 }
             }
@@ -120,28 +121,28 @@ namespace CVAssignment20221217124400
         private Bitmap Prev()
         {
             index++;
-            if (index >= predImgs.Count)
+            if (index >= predictionResults.Count)
             {
                 index = 0;
             }
 
-            return predImgs[index];
+            return predictionResults[index].Image;
         }
 
         private Bitmap Next()
         {
             index--;
-            if ((index < 0) && (predImgs.Count != 0))
+            if ((index < 0) && (predictionResults.Count != 0))
             {
-                index = predImgs.Count - 1;
+                index = predictionResults.Count - 1;
             }
 
-            return predImgs[index];
+            return predictionResults[index].Image;
         }
 
         private string ObjDttctProb()
         {
-            string output = $"Probability: {predictions[index].probability * 100}%";
+            string output = $"Probability: {predictionResults[index].Probability * 100}%";
             return output;
         }
 

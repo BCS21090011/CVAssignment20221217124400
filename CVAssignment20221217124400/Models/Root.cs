@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PredictionModels
+namespace CVAssignment20221217124400.Models
 {
     public class BoundingBox
     {
