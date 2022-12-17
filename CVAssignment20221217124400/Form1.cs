@@ -21,14 +21,17 @@ namespace CVAssignment20221217124400
         private string classificationKey = "";
         private string classificationUrl = "";
 
+        private int index = 0;
+        private double objDttctProbToPass = 0.95;
+        private string objDttctTargetTagName = "people";
+
         private TargetAPI objdttctAPI;
         private TargetAPI classAPI;
 
+        private bool haveResult = true;
         private string imgFileName;
         private Bitmap oriImg;
         private List<MaOwnPredModel> predictionResults = new List<MaOwnPredModel>();
-
-        private int index = 0;
 
         public Form1()
         {
@@ -93,29 +96,20 @@ namespace CVAssignment20221217124400
 
         private async Task GetObjectFromImg()
         {
-            double probToPass = 0.95;
-            string targetTagName = "people";
-
-            MyPredictionModel predModel = await objdttctAPI.GetPredictionsAsync(oriImg);
-            List<Prediction> tmpPredictions = predModel.predictions;
+            List<Prediction> tmpPredictions = await objdttctAPI.GetPredictionsAsync(oriImg);
 
             ObjDetection obj = new ObjDetection();
-            
-            foreach(Prediction pred in tmpPredictions)
-            {
-                if (pred.probability >= probToPass)
-                {
-                    if (pred.tagName == targetTagName)
-                    {
-                        predictionResults.Add(new MaOwnPredModel()
-                        {
-                            Image = obj.GetPredictionBitmapImg(oriImg, pred),
-                            Probability = pred.probability
-                        });
-                    }
-                }
-            }
+            predictionResults = obj.GetMaOwnPredModel(predictionResults, tmpPredictions, oriImg, objDttctTargetTagName, objDttctProbToPass);
 
+            if (predictionResults.Count == 0)
+            {
+                haveResult = false;
+                predictionResults.Add(new MaOwnPredModel()
+                {
+                    Image = new Bitmap(1, 1),
+                    Probability = 0.0
+                });
+            }
         }
 
         private Bitmap Prev()
@@ -142,7 +136,17 @@ namespace CVAssignment20221217124400
 
         private string ObjDttctProb()
         {
-            string output = $"Probability: {predictionResults[index].Probability * 100}%";
+            string output = "";
+
+            if (haveResult == true)
+            {
+                output = $"Probability: {predictionResults[index].Probability * 100}%";
+            }
+            else
+            {
+                output = "No result found";
+            }
+
             return output;
         }
 

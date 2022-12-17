@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace ObjectDetection
 {
@@ -9,7 +10,81 @@ namespace ObjectDetection
     public class ObjDetection
     {
 
-        public Bitmap GetPredictionBitmapImg(Bitmap oriImg, Prediction prediction)
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, Prediction prediction, Bitmap oriImg, double probToPass = 0.0)
+        {
+            if (prediction.probability >= probToPass)
+            {
+                result.Add(new MaOwnPredModel()
+                {
+                    Image = GetCroppedPredictionBitmapImg(oriImg, prediction),
+                    Probability = prediction.probability
+                });
+            }
+
+            return result;
+        }
+
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, Prediction prediction, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)
+        {
+            if (prediction.tagName == wantedTagName)
+            {
+                result = GetMaOwnPredModel(result, prediction, oriImg, probToPass);
+            }
+
+            return result;
+        }
+
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, Prediction prediction, Bitmap oriImg, string[] wantedTagName, double probToPass = 0.0)
+        {
+            if (wantedTagName.Contains(prediction.tagName))
+            {
+                result = GetMaOwnPredModel(result, prediction, oriImg, probToPass);
+            }
+
+            return result;
+        }
+
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, Prediction prediction, Bitmap oriImg, List<string> wantedTagName, double probToPass = 0.0)
+        {
+            if (wantedTagName.Contains(prediction.tagName))
+            {
+                result = GetMaOwnPredModel(result, prediction, oriImg, probToPass);
+            }
+
+            return result;
+        }
+
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, List<Prediction> predictions, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)
+        {
+            foreach (Prediction pred in predictions)
+            {
+                result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
+            }
+
+            return result;
+        }
+
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, List<Prediction> predictions, Bitmap oriImg, string[] wantedTagName, double probToPass = 0.0)
+        {
+            foreach (Prediction pred in predictions)
+            {
+                result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
+            }
+
+            return result;
+        }
+
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, List<Prediction> predictions, Bitmap oriImg, List<string> wantedTagName, double probToPass = 0.0)
+        {
+            foreach (Prediction pred in predictions)
+            {
+                result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
+            }
+
+            return result;
+        }
+
+        public Bitmap GetCroppedPredictionBitmapImg(Bitmap oriImg, Prediction prediction)
         {
             Rectangle ruler = GetRect(oriImg, prediction.boundingBox);
             Bitmap objImg = CutImg(oriImg, ruler);
@@ -17,13 +92,13 @@ namespace ObjectDetection
             return objImg;
         }
 
-        public List<Bitmap> GetPredictionBitmapImg(Bitmap oriImg, List<Prediction> predictions)
+        public List<Bitmap> GetCroppedPredictionBitmapImg(Bitmap oriImg, List<Prediction> predictions)
         {
             List<Bitmap> objImg = new List<Bitmap>();
 
             foreach(Prediction prediction in predictions)
             {
-                objImg.Add(GetPredictionBitmapImg(oriImg, prediction));
+                objImg.Add(GetCroppedPredictionBitmapImg(oriImg, prediction));
             }
 
             return objImg;
