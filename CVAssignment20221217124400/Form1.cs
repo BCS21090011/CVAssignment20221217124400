@@ -99,7 +99,7 @@ namespace CVAssignment20221217124400
             List<Prediction> tmpPredictions = await objdttctAPI.GetPredictionsAsync(oriImg);
 
             ObjDetection obj = new ObjDetection();
-            predictionResults = obj.GetMaOwnPredModel(predictionResults, tmpPredictions, oriImg, objDttctTargetTagName, objDttctProbToPass);
+            predictionResults = obj.GetMaOwnPredModel(tmpPredictions, oriImg, objDttctTargetTagName, objDttctProbToPass);
 
             if (predictionResults.Count == 0)
             {
@@ -109,6 +109,10 @@ namespace CVAssignment20221217124400
                     Image = new Bitmap(1, 1),
                     Probability = 0.0
                 });
+            }
+            else
+            {
+                haveResult = true;
             }
         }
 

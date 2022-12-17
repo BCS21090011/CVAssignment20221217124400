@@ -54,8 +54,10 @@ namespace ObjectDetection
             return result;
         }
 
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, List<Prediction> predictions, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<Prediction> predictions, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)
         {
+            List<MaOwnPredModel> result = new List<MaOwnPredModel>();
+
             foreach (Prediction pred in predictions)
             {
                 result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
@@ -64,8 +66,10 @@ namespace ObjectDetection
             return result;
         }
 
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, List<Prediction> predictions, Bitmap oriImg, string[] wantedTagName, double probToPass = 0.0)
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<Prediction> predictions, Bitmap oriImg, string[] wantedTagName, double probToPass = 0.0)
         {
+            List<MaOwnPredModel> result = new List<MaOwnPredModel>();
+
             foreach (Prediction pred in predictions)
             {
                 result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
@@ -74,8 +78,10 @@ namespace ObjectDetection
             return result;
         }
 
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, List<Prediction> predictions, Bitmap oriImg, List<string> wantedTagName, double probToPass = 0.0)
+        public List<MaOwnPredModel> GetMaOwnPredModel(List<Prediction> predictions, Bitmap oriImg, List<string> wantedTagName, double probToPass = 0.0)
         {
+            List<MaOwnPredModel> result = new List<MaOwnPredModel>();
+
             foreach (Prediction pred in predictions)
             {
                 result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
