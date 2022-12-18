@@ -10,82 +10,31 @@ namespace ObjectDetection
     public class ObjDetection
     {
 
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, Prediction prediction, Bitmap oriImg, double probToPass = 0.0)
+        public void GetMaOwnPredModel(List<MaOwnPredModel> predModel, List<Prediction> predictions, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)
         {
-            if (prediction.probability >= probToPass)
+            int index = 0;
+            foreach (Prediction pred in predictions)
             {
-                result.Add(new MaOwnPredModel()
+                if (pred.tagName == wantedTagName)
                 {
-                    Image = GetCroppedPredictionBitmapImg(oriImg, prediction),
-                    Probability = prediction.probability
-                });
+                    if (pred.probability >= probToPass)
+                    {
+                        predModel.Add(new MaOwnPredModel()
+                        {
+                            Name = $"{wantedTagName}NO:{index}",
+                            Image = GetCroppedPredictionBitmapImg(oriImg, pred),
+                            Probability = pred.probability
+                        });
+                        index++;
+                    }
+                }
             }
-
-            return result;
-        }
-
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, Prediction prediction, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)
-        {
-            if (prediction.tagName == wantedTagName)
-            {
-                result = GetMaOwnPredModel(result, prediction, oriImg, probToPass);
-            }
-
-            return result;
-        }
-
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, Prediction prediction, Bitmap oriImg, string[] wantedTagName, double probToPass = 0.0)
-        {
-            if (wantedTagName.Contains(prediction.tagName))
-            {
-                result = GetMaOwnPredModel(result, prediction, oriImg, probToPass);
-            }
-
-            return result;
-        }
-
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<MaOwnPredModel> result, Prediction prediction, Bitmap oriImg, List<string> wantedTagName, double probToPass = 0.0)
-        {
-            if (wantedTagName.Contains(prediction.tagName))
-            {
-                result = GetMaOwnPredModel(result, prediction, oriImg, probToPass);
-            }
-
-            return result;
         }
 
         public List<MaOwnPredModel> GetMaOwnPredModel(List<Prediction> predictions, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)
         {
             List<MaOwnPredModel> result = new List<MaOwnPredModel>();
-
-            foreach (Prediction pred in predictions)
-            {
-                result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
-            }
-
-            return result;
-        }
-
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<Prediction> predictions, Bitmap oriImg, string[] wantedTagName, double probToPass = 0.0)
-        {
-            List<MaOwnPredModel> result = new List<MaOwnPredModel>();
-
-            foreach (Prediction pred in predictions)
-            {
-                result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
-            }
-
-            return result;
-        }
-
-        public List<MaOwnPredModel> GetMaOwnPredModel(List<Prediction> predictions, Bitmap oriImg, List<string> wantedTagName, double probToPass = 0.0)
-        {
-            List<MaOwnPredModel> result = new List<MaOwnPredModel>();
-
-            foreach (Prediction pred in predictions)
-            {
-                result = GetMaOwnPredModel(result, pred, oriImg, wantedTagName, probToPass);
-            }
+            GetMaOwnPredModel(result, predictions, oriImg, wantedTagName, probToPass);
 
             return result;
         }
