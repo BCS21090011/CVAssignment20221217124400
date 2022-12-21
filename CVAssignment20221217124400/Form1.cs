@@ -46,6 +46,9 @@ namespace CVAssignment20221217124400
             NextButton.Visible = false;
             CroppedImgNameLabel.Visible = false;
             ObjDttctProbLabel.Visible = false;
+            LoadingProcessingProgressBar.Visible = false;
+            LoadingProcessingProgressBar.Minimum = 0;
+            LoadingProcessingProgressBar.Maximum = 100;
             Console.WriteLine("Setted up");
         }
 
@@ -56,15 +59,18 @@ namespace CVAssignment20221217124400
 
         private async void BrowseImgButton_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Reset results");
-            predictionResults.Clear();
-
             OpenFileDialog OpenFile = new OpenFileDialog();
             if (OpenFile.ShowDialog() == DialogResult.OK)
             {
                 Console.WriteLine("Getting data");
                 imgFileName = OpenFile.FileName;
+                Console.WriteLine("Reset results");
+                predictionResults.Clear();
                 Console.WriteLine("Data got");
+
+                LoadingProcessingProgressBar.Visible = true;
+
+                LoadingProcessingProgressBar.Value = 0;
                 oriImg = (Bitmap)Image.FromFile(imgFileName);
 
                 OriImgBox.Image = oriImg;
@@ -74,11 +80,14 @@ namespace CVAssignment20221217124400
                 CroppedImgNameLabel.Visible = true;
                 ObjDttctProbLabel.Visible = true;
                 index = 0;
+                LoadingProcessingProgressBar.Value = 5;
 
                 Console.WriteLine("Starting object detection");
                 await GetObjectFromImg();
                 Console.WriteLine("Done object detection");
+
                 GetInfo();
+                LoadingProcessingProgressBar.Visible = false;
             }
         }
 
@@ -132,16 +141,19 @@ namespace CVAssignment20221217124400
                 tmpPredictions = await objdttctAPI.GetPredictionsAsync(oriImg);
                 Console.WriteLine($"Object detection: Number of predictions: {tmpPredictions.Count}");
                 Console.WriteLine("Object detection: Predictions got");
+                LoadingProcessingProgressBar.Value = 10;
             }catch (Exception)
             {
 
             }
 
             ObjDetection obj = new ObjDetection();
+
             Console.WriteLine("Object detection: Adding results");
             predictionResults = obj.GetMaOwnPredModel(tmpPredictions, oriImg, objDttctTargetTagName, objDttctProbToPass);
             Console.WriteLine($"Object detection: Number of results: {predictionResults.Count}");
             Console.WriteLine("Object detection: Results added");
+            LoadingProcessingProgressBar.Value = 50;
 
             if (predictionResults.Count == 0)
             {
@@ -178,26 +190,31 @@ namespace CVAssignment20221217124400
             {
                 TriggeredIndicatorLabel.Text = "Not triggered";
             }
+            LoadingProcessingProgressBar.Value = 100;
+
         }
 
-        public async Task GoClassification()
+        private async Task GoClassification()
         {
 
-            foreach(MaOwnPredModel model in predictionResults)
+            foreach (MaOwnPredModel model in predictionResults)
             {
                 model.ClassificationPredictions = new List<Prediction>();
 
                 try
                 {
                     Console.WriteLine("Classification: Getting predictions");
+                    LoadingProcessingProgressBar.Value = 55;
                     List<Prediction> tmpPred = await classAPI.GetPredictionsAsync(model.Image);
                     Console.WriteLine("Classification: Predictions got");
+                    LoadingProcessingProgressBar.Value = 60;
                     if(tmpPred != null)
                     {
                         Console.WriteLine($"Classification: Number of predictions: {tmpPred.Count}");
                         Console.WriteLine("Classification: Adding results");
                         model.ClassificationPredictions = tmpPred;
                         Console.WriteLine("Classification: Results added");
+                        LoadingProcessingProgressBar.Value = 65;
                     }
                 }
                 catch (Exception)
@@ -209,6 +226,7 @@ namespace CVAssignment20221217124400
                 Console.WriteLine("Classification: Processing results");
                 obj.GetClassificationResult(model, clssTagName, clssProbToTrig);
                 Console.WriteLine("Classification: Results processed");
+                LoadingProcessingProgressBar.Value = 95;
             }
 
         }

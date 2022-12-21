@@ -36,6 +36,7 @@
             this.ObjDttctProbLabel = new System.Windows.Forms.Label();
             this.CroppedImgNameLabel = new System.Windows.Forms.Label();
             this.TriggeredIndicatorLabel = new System.Windows.Forms.Label();
+            this.LoadingProcessingProgressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.OriImgBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CroppedImgBox)).BeginInit();
             this.SuspendLayout();
@@ -115,11 +116,19 @@
             this.TriggeredIndicatorLabel.TabIndex = 8;
             this.TriggeredIndicatorLabel.Text = "label1";
             // 
+            // LoadingProcessingProgressBar
+            // 
+            this.LoadingProcessingProgressBar.Location = new System.Drawing.Point(570, 130);
+            this.LoadingProcessingProgressBar.Name = "LoadingProcessingProgressBar";
+            this.LoadingProcessingProgressBar.Size = new System.Drawing.Size(100, 23);
+            this.LoadingProcessingProgressBar.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.LoadingProcessingProgressBar);
             this.Controls.Add(this.TriggeredIndicatorLabel);
             this.Controls.Add(this.CroppedImgNameLabel);
             this.Controls.Add(this.ObjDttctProbLabel);
@@ -148,6 +157,7 @@
         private System.Windows.Forms.Label ObjDttctProbLabel;
         private System.Windows.Forms.Label CroppedImgNameLabel;
         private System.Windows.Forms.Label TriggeredIndicatorLabel;
+        private System.Windows.Forms.ProgressBar LoadingProcessingProgressBar;
     }
 }
 
