@@ -39,12 +39,14 @@ namespace CVAssignment20221217124400
         public Form1()
         {
             InitializeComponent();
+            Console.WriteLine("Setting up");
             objdttctAPI = new TargetAPI(predictionKey, predictionUrl);
             classAPI = new TargetAPI(classificationKey, classificationUrl);
             PrevButton.Visible = false;
             NextButton.Visible = false;
             CroppedImgNameLabel.Visible = false;
             ObjDttctProbLabel.Visible = false;
+            Console.WriteLine("Setted up");
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -54,12 +56,15 @@ namespace CVAssignment20221217124400
 
         private async void BrowseImgButton_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("Reset results");
             predictionResults.Clear();
 
             OpenFileDialog OpenFile = new OpenFileDialog();
             if (OpenFile.ShowDialog() == DialogResult.OK)
             {
+                Console.WriteLine("Getting data");
                 imgFileName = OpenFile.FileName;
+                Console.WriteLine("Data got");
                 oriImg = (Bitmap)Image.FromFile(imgFileName);
 
                 OriImgBox.Image = oriImg;
@@ -68,8 +73,12 @@ namespace CVAssignment20221217124400
                 NextButton.Visible = true;
                 CroppedImgNameLabel.Visible = true;
                 ObjDttctProbLabel.Visible = true;
+                index = 0;
 
+                Console.WriteLine("Starting object detection");
                 await GetObjectFromImg();
+                Console.WriteLine("Done object detection");
+                GetInfo();
             }
         }
 
@@ -77,9 +86,15 @@ namespace CVAssignment20221217124400
         {
             try
             {
-                CroppedImgNameLabel.Text = predictionResults[index].Name;
-                CroppedImgBox.Image = Prev();
-                ObjDttctProbLabel.Text = ObjDttctProb();
+                if (predictionResults.Count != 0)
+                {
+                    index--;
+                    if (index < 0)
+                    {
+                        index = predictionResults.Count - 1;
+                    }
+                    GetInfo();
+                }
             }
             catch (Exception)
             {
@@ -91,9 +106,15 @@ namespace CVAssignment20221217124400
         {
             try
             {
-                CroppedImgNameLabel.Text = predictionResults[index].Name;
-                CroppedImgBox.Image = Next();
-                ObjDttctProbLabel.Text = ObjDttctProb();
+                if (predictionResults.Count != 0)
+                {
+                    index++;
+                    if (index >= predictionResults.Count)
+                    {
+                        index = 0;
+                    }
+                    GetInfo();
+                }
             }
             catch (Exception)
             {
@@ -107,14 +128,20 @@ namespace CVAssignment20221217124400
 
             try
             {
+                Console.WriteLine("Object detection: Getting predictions");
                 tmpPredictions = await objdttctAPI.GetPredictionsAsync(oriImg);
+                Console.WriteLine($"Object detection: Number of predictions: {tmpPredictions.Count}");
+                Console.WriteLine("Object detection: Predictions got");
             }catch (Exception)
             {
 
             }
 
             ObjDetection obj = new ObjDetection();
+            Console.WriteLine("Object detection: Adding results");
             predictionResults = obj.GetMaOwnPredModel(tmpPredictions, oriImg, objDttctTargetTagName, objDttctProbToPass);
+            Console.WriteLine($"Object detection: Number of results: {predictionResults.Count}");
+            Console.WriteLine("Object detection: Results added");
 
             if (predictionResults.Count == 0)
             {
@@ -130,7 +157,9 @@ namespace CVAssignment20221217124400
             else
             {
                 haveResult = true;
+                Console.WriteLine("Starting classification");
                 await GoClassification();
+                Console.WriteLine("Done classification");
             }
 
             bool triged = false;
@@ -160,10 +189,15 @@ namespace CVAssignment20221217124400
 
                 try
                 {
+                    Console.WriteLine("Classification: Getting predictions");
                     List<Prediction> tmpPred = await classAPI.GetPredictionsAsync(model.Image);
+                    Console.WriteLine($"Classification: Number of predictions: {tmpPred.Count}");
+                    Console.WriteLine("Classification: Predictions got");
                     if(tmpPred != null)
                     {
+                        Console.WriteLine("Classification: Adding results");
                         model.ClassificationPredictions = tmpPred;
+                        Console.WriteLine("Classification: Results added");
                     }
                 }
                 catch (Exception)
@@ -172,36 +206,19 @@ namespace CVAssignment20221217124400
                 }
 
                 Classfction obj = new Classfction();
+                Console.WriteLine("Classification: Processing results");
                 obj.GetClassificationResult(model, clssTagName, clssProbToTrig);
+                Console.WriteLine("Classification: Results processed");
             }
 
         }
 
-        private Bitmap Prev()
-        {
-            index--;
-            if ((index < 0) && (predictionResults.Count != 0))
-            {
-                index = predictionResults.Count - 1;
-            }
-
-            return predictionResults[index].Image;
-        }
-
-        private Bitmap Next()
-        {
-            index++;
-            if (index >= predictionResults.Count)
-            {
-                index = 0;
-            }
-
-            return predictionResults[index].Image;
-        }
-
-        private string ObjDttctProb()
+        private void GetInfo()
         {
             string output = "";
+
+            CroppedImgNameLabel.Text = predictionResults[index].Name;
+            CroppedImgBox.Image = predictionResults[index].Image;
 
             if (haveResult == true)
             {
@@ -212,7 +229,8 @@ namespace CVAssignment20221217124400
                 output = "No result found";
             }
 
-            return output;
+            ObjDttctProbLabel.Text = output;
+
         }
 
     }

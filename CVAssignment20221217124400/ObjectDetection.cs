@@ -13,12 +13,16 @@ namespace ObjectDetection
         public void GetMaOwnPredModel(List<MaOwnPredModel> predModel, List<Prediction> predictions, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)
         {
             int index = 0;
+
+            Console.WriteLine("Object detection: Processing images");
             foreach (Prediction pred in predictions)
             {
+                Console.WriteLine($"Object detection: Processing-Tag name: {pred.tagName}-Probability: {pred.probability}");
                 if (pred.tagName == wantedTagName)
                 {
                     if (pred.probability >= probToPass)
                     {
+                        Console.WriteLine("Object detection: Cropping and adding");
                         predModel.Add(new MaOwnPredModel()
                         {
                             Name = $"{wantedTagName}NO:{index}",
@@ -26,9 +30,12 @@ namespace ObjectDetection
                             Probability = pred.probability
                         });
                         index++;
+                        Console.WriteLine("Object detection: Done cropping and adding");
                     }
                 }
+                Console.WriteLine("Object detection: Processing done");
             }
+            Console.WriteLine("Object detection: Done processing images");
         }
 
         public List<MaOwnPredModel> GetMaOwnPredModel(List<Prediction> predictions, Bitmap oriImg, string wantedTagName, double probToPass = 0.0)

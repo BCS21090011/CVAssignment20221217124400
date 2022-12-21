@@ -28,14 +28,18 @@ namespace Classification
         {
             bool triged = false;
 
+            Console.WriteLine("Classification: Processing predictions");
             foreach(Prediction prediction in predictions)
             {
+                Console.WriteLine($"Classification: Processing-Tag name: {prediction.tagName}-Probability: {prediction.probability}");
                 bool tmpTriged = GetClassificationResult(prediction, tagName, probToTrig);
+                Console.WriteLine("Classification: Processing done");
                 if (tmpTriged == true)
                 {
                     triged = true;
                 }
             }
+            Console.WriteLine("Classification: Processing predictions done");
 
             return triged;
         }
@@ -46,11 +50,13 @@ namespace Classification
 
             triged = GetClassificationResult(predModel.ClassificationPredictions, tagName, probToTrig);
 
+            Console.WriteLine("Classification: Processing predictions");
             if(triged == true)
             {
                 predModel.Name += "Triggered!";
             }
             predModel.Triggered = triged;
+            Console.WriteLine("Classification: Processing done");
         }
 
     }
