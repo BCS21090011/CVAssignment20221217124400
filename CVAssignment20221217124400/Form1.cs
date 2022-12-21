@@ -191,10 +191,10 @@ namespace CVAssignment20221217124400
                 {
                     Console.WriteLine("Classification: Getting predictions");
                     List<Prediction> tmpPred = await classAPI.GetPredictionsAsync(model.Image);
-                    Console.WriteLine($"Classification: Number of predictions: {tmpPred.Count}");
                     Console.WriteLine("Classification: Predictions got");
                     if(tmpPred != null)
                     {
+                        Console.WriteLine($"Classification: Number of predictions: {tmpPred.Count}");
                         Console.WriteLine("Classification: Adding results");
                         model.ClassificationPredictions = tmpPred;
                         Console.WriteLine("Classification: Results added");
