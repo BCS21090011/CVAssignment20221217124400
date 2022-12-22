@@ -11,6 +11,7 @@ using UsingAPI;
 using CVAssignment20221217124400.Models;
 using ObjectDetection;
 using Classification;
+using System.Media;
 
 namespace CVAssignment20221217124400
 {
@@ -31,7 +32,10 @@ namespace CVAssignment20221217124400
         private TargetAPI objdttctAPI;
         private TargetAPI classAPI;
 
+        private SoundPlayer triggeredSound = new SoundPlayer("../../TriggeredSound.wav");
+
         private bool haveResult = true;
+        private bool triged = false;
         private string imgFileName;
         private Bitmap oriImg;
         private List<MaOwnPredModel> predictionResults = new List<MaOwnPredModel>();
@@ -42,6 +46,7 @@ namespace CVAssignment20221217124400
             Console.WriteLine("Setting up");
             objdttctAPI = new TargetAPI(predictionKey, predictionUrl);
             classAPI = new TargetAPI(classificationKey, classificationUrl);
+
             PrevButton.Visible = false;
             NextButton.Visible = false;
             CroppedImgNameLabel.Visible = false;
@@ -65,6 +70,7 @@ namespace CVAssignment20221217124400
                 Console.WriteLine("Getting data");
                 imgFileName = OpenFile.FileName;
                 Console.WriteLine("Reset results");
+                triged = false;
                 predictionResults.Clear();
                 Console.WriteLine("Data got");
 
@@ -85,6 +91,24 @@ namespace CVAssignment20221217124400
                 Console.WriteLine("Starting object detection");
                 await GetObjectFromImg();
                 Console.WriteLine("Done object detection");
+
+                foreach (MaOwnPredModel predModel in predictionResults)
+                {
+                    if (predModel.Triggered == true)
+                    {
+                        triged = true;
+                    }
+                }
+                if (triged == true)
+                {
+                    TriggeredIndicatorLabel.Text = "Triggered!";
+                    triggeredSound.Play();
+                }
+                else
+                {
+                    TriggeredIndicatorLabel.Text = "Not triggered";
+                }
+                LoadingProcessingProgressBar.Value = 100;
 
                 GetInfo();
                 LoadingProcessingProgressBar.Visible = false;
@@ -173,24 +197,6 @@ namespace CVAssignment20221217124400
                 await GoClassification();
                 Console.WriteLine("Done classification");
             }
-
-            bool triged = false;
-            foreach(MaOwnPredModel predModel in predictionResults)
-            {
-                if (predModel.Triggered == true)
-                {
-                    triged = true;
-                }
-            }
-            if (triged == true)
-            {
-                TriggeredIndicatorLabel.Text = "Triggered!";
-            }
-            else
-            {
-                TriggeredIndicatorLabel.Text = "Not triggered";
-            }
-            LoadingProcessingProgressBar.Value = 100;
 
         }
 
