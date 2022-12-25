@@ -33,7 +33,6 @@
             this.BrowseImgButton = new System.Windows.Forms.Button();
             this.NextButton = new System.Windows.Forms.Button();
             this.PrevButton = new System.Windows.Forms.Button();
-            this.ObjDttctProbLabel = new System.Windows.Forms.Label();
             this.CroppedImgNameLabel = new System.Windows.Forms.Label();
             this.TriggeredIndicatorLabel = new System.Windows.Forms.Label();
             this.LoadingProcessingProgressBar = new System.Windows.Forms.ProgressBar();
@@ -89,15 +88,6 @@
             this.PrevButton.UseVisualStyleBackColor = true;
             this.PrevButton.Click += new System.EventHandler(this.PrevButton_Click);
             // 
-            // ObjDttctProbLabel
-            // 
-            this.ObjDttctProbLabel.AutoSize = true;
-            this.ObjDttctProbLabel.Location = new System.Drawing.Point(521, 256);
-            this.ObjDttctProbLabel.Name = "ObjDttctProbLabel";
-            this.ObjDttctProbLabel.Size = new System.Drawing.Size(0, 16);
-            this.ObjDttctProbLabel.TabIndex = 6;
-            this.ObjDttctProbLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // CroppedImgNameLabel
             // 
             this.CroppedImgNameLabel.AutoSize = true;
@@ -110,11 +100,11 @@
             // TriggeredIndicatorLabel
             // 
             this.TriggeredIndicatorLabel.AutoSize = true;
-            this.TriggeredIndicatorLabel.Location = new System.Drawing.Point(592, 284);
+            this.TriggeredIndicatorLabel.Location = new System.Drawing.Point(521, 256);
             this.TriggeredIndicatorLabel.Name = "TriggeredIndicatorLabel";
-            this.TriggeredIndicatorLabel.Size = new System.Drawing.Size(44, 16);
+            this.TriggeredIndicatorLabel.Size = new System.Drawing.Size(0, 16);
             this.TriggeredIndicatorLabel.TabIndex = 8;
-            this.TriggeredIndicatorLabel.Text = "label1";
+            this.TriggeredIndicatorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LoadingProcessingProgressBar
             // 
@@ -131,7 +121,6 @@
             this.Controls.Add(this.LoadingProcessingProgressBar);
             this.Controls.Add(this.TriggeredIndicatorLabel);
             this.Controls.Add(this.CroppedImgNameLabel);
-            this.Controls.Add(this.ObjDttctProbLabel);
             this.Controls.Add(this.PrevButton);
             this.Controls.Add(this.NextButton);
             this.Controls.Add(this.BrowseImgButton);
@@ -154,7 +143,6 @@
         private System.Windows.Forms.Button BrowseImgButton;
         private System.Windows.Forms.Button NextButton;
         private System.Windows.Forms.Button PrevButton;
-        private System.Windows.Forms.Label ObjDttctProbLabel;
         private System.Windows.Forms.Label CroppedImgNameLabel;
         private System.Windows.Forms.Label TriggeredIndicatorLabel;
         private System.Windows.Forms.ProgressBar LoadingProcessingProgressBar;

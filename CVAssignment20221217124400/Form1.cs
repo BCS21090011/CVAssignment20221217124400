@@ -34,7 +34,6 @@ namespace CVAssignment20221217124400
 
         private SoundPlayer triggeredSound = new SoundPlayer("../../TriggeredSound.wav");
 
-        private bool haveResult = true;
         private bool triged = false;
         private string imgFileName;
         private Bitmap oriImg;
@@ -50,8 +49,8 @@ namespace CVAssignment20221217124400
             PrevButton.Visible = false;
             NextButton.Visible = false;
             CroppedImgNameLabel.Visible = false;
-            ObjDttctProbLabel.Visible = false;
             LoadingProcessingProgressBar.Visible = false;
+            TriggeredIndicatorLabel.Visible = false;
             LoadingProcessingProgressBar.Minimum = 0;
             LoadingProcessingProgressBar.Maximum = 100;
             Console.WriteLine("Setted up");
@@ -84,7 +83,7 @@ namespace CVAssignment20221217124400
                 PrevButton.Visible = true;
                 NextButton.Visible = true;
                 CroppedImgNameLabel.Visible = true;
-                ObjDttctProbLabel.Visible = true;
+                TriggeredIndicatorLabel.Visible = true;
                 index = 0;
                 LoadingProcessingProgressBar.Value = 5;
 
@@ -101,12 +100,12 @@ namespace CVAssignment20221217124400
                 }
                 if (triged == true)
                 {
-                    TriggeredIndicatorLabel.Text = "Triggered!";
+                    TriggeredIndicatorLabel.Text = "Someone's trying to\ninvade your house!";
                     triggeredSound.Play();
                 }
                 else
                 {
-                    TriggeredIndicatorLabel.Text = "Not triggered";
+                    TriggeredIndicatorLabel.Text = "Nothing";
                 }
                 LoadingProcessingProgressBar.Value = 100;
 
@@ -181,7 +180,6 @@ namespace CVAssignment20221217124400
 
             if (predictionResults.Count == 0)
             {
-                haveResult = false;
                 predictionResults.Add(new MaOwnPredModel()
                 {
                     Name = "",
@@ -192,7 +190,6 @@ namespace CVAssignment20221217124400
             }
             else
             {
-                haveResult = true;
                 Console.WriteLine("Starting classification");
                 await GoClassification();
                 Console.WriteLine("Done classification");
@@ -239,22 +236,8 @@ namespace CVAssignment20221217124400
 
         private void GetInfo()
         {
-            string output = "";
-
             CroppedImgNameLabel.Text = predictionResults[index].Name;
             CroppedImgBox.Image = predictionResults[index].Image;
-
-            if (haveResult == true)
-            {
-                output = $"Probability: {predictionResults[index].Probability * 100}%";
-            }
-            else
-            {
-                output = "No result found";
-            }
-
-            ObjDttctProbLabel.Text = output;
-
         }
 
     }
