@@ -9,8 +9,10 @@ namespace CVAssignment20221217124400.Models
 {
     public class MaOwnPredModel
     {
+        public string Name { get; set; }
         public Bitmap Image { get; set; }
         public double Probability { get; set; }
-        public List<Prediction> ClassificationPredictions { get; set; }
+        public bool Triggered { get; set; }
+        public List<Prediction> ClassificationPredictions { get; set; } = new List<Prediction>();
     }
 }
