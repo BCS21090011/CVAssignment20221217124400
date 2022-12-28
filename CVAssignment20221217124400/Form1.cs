@@ -208,17 +208,10 @@ namespace CVAssignment20221217124400
                 {
                     Console.WriteLine("Classification: Getting predictions");
                     LoadingProcessingProgressBar.Value = 55;
-                    List<Prediction> tmpPred = await classAPI.GetPredictionsAsync(model.Image);
+                    model.ClassificationPredictions = await classAPI.GetPredictionsAsync(model.Image);
+                    Console.WriteLine($"Classification: Number of predictions: {model.ClassificationPredictions.Count}");
                     Console.WriteLine("Classification: Predictions got");
                     LoadingProcessingProgressBar.Value = 60;
-                    if(tmpPred != null)
-                    {
-                        Console.WriteLine($"Classification: Number of predictions: {tmpPred.Count}");
-                        Console.WriteLine("Classification: Adding results");
-                        model.ClassificationPredictions = tmpPred;
-                        Console.WriteLine("Classification: Results added");
-                        LoadingProcessingProgressBar.Value = 65;
-                    }
                 }
                 catch (Exception)
                 {
