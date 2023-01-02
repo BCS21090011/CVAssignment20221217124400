@@ -209,6 +209,12 @@ namespace CVAssignment20221217124400
                     Console.WriteLine("Classification: Getting predictions");
                     LoadingProcessingProgressBar.Value = 55;
                     model.ClassificationPredictions = await classAPI.GetPredictionsAsync(model.Image);
+
+                    if (model.ClassificationPredictions == null)
+                    {
+                        model.ClassificationPredictions = new List<Prediction>();
+                    }
+
                     Console.WriteLine($"Classification: Number of predictions: {model.ClassificationPredictions.Count}");
                     Console.WriteLine("Classification: Predictions got");
                     LoadingProcessingProgressBar.Value = 60;
